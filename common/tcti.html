@@ -1,0 +1,86 @@
+<h1 id="tcti-configuration">TCTI Configuration</h1>
+<p>The TCTI or &quot;Transmission Interface&quot; is the communication mechanism with the
+TPM. TCTIs can be changed for communication with TPMs across different
+mediums.</p>
+<p>To control the TCTI, the tools respect:</p>
+<ol>
+<li>The command line option <strong>-T</strong> or <strong>--tcti</strong></li>
+<li>The environment variable: <em>TPM2TOOLS_TCTI</em>.</li>
+</ol>
+<p><strong>Note:</strong> The command line option always overrides the environment variable.</p>
+<p>The current known TCTIs are:</p>
+<ul>
+<li><p>tabrmd - The resource manager, called</p>
+<pre><code>     [tabrmd](https://github.com/tpm2-software/tpm2-abrmd).
+       Note that tabrmd and abrmd as a tcti name are synonymous.
+</code></pre>
+</li>
+<li><p>mssim  - Typically used for communicating to the TPM software simulator.</p>
+</li>
+<li><p>device - Used when talking directly to a TPM device file.</p>
+</li>
+<li><p>none - Do not initalize a connection with the TPM. Some tools allow for off-tpm</p>
+<pre><code>   options and thus support not using a TCTI. Tools that do not support it
+   will error when attempted to be used without a TCTI connection. Does not
+   support *ANY* options and *MUST BE* presented as the exact text of &quot;none&quot;.
+</code></pre>
+</li>
+</ul>
+<p>The arguments to either the command line option or the environment variable are
+in the form:</p>
+<p><code>&lt;tcti-name&gt;:&lt;tcti-option-config&gt;</code></p>
+<p>Specifying an empty string for either the <code>&lt;tcti-name&gt;</code> or
+<code>&lt;tcti-option-config&gt;</code> results in the default being used for that portion
+respectively.</p>
+<h2 id="tcti-defaults">TCTI Defaults</h2>
+<p>When a TCTI is not specified, the default TCTI is searched for using <em>dlopen(3)</em>
+semantics. The tools will search for <em>tabrmd</em>, <em>device</em> and <em>mssim</em> TCTIs
+<strong>IN THAT ORDER</strong> and <strong>USE THE FIRST ONE FOUND</strong>. You can query what TCTI will
+be chosen as the default by using the <strong>-v</strong> option to print the version
+information. The &quot;default-tcti&quot; key-value pair will indicate which of the
+aforementioned TCTIs is the default.</p>
+<h2 id="custom-tctis">Custom TCTIs</h2>
+<p>Any TCTI that implements the dynamic TCTI interface can be loaded. The tools
+internally use <em>dlopen(3)</em>, and the raw <em>tcti-name</em> value is used for the
+lookup. Thus, this could be a path to the shared library, or a library name as
+understood by <em>dlopen(3)</em> semantics.</p>
+<h1 id="tcti-options">TCTI OPTIONS</h1>
+<p>This collection of options are used to configure the various known TCTI modules
+available:</p>
+<ul>
+<li><p><strong>device</strong>:
+For the device TCTI, the TPM character device file for use by
+the device TCTI can be specified. The default is <em>/dev/tpm0</em>.</p>
+<p>Example: <strong>-T device:/dev/tpm0</strong> or
+<strong>export <em>TPM2TOOLS_TCTI</em>=&quot;device:/dev/tpm0&quot;</strong></p>
+</li>
+<li><p><strong>mssim</strong>:
+For the mssim TCTI, the domain name or IP address and port number used by
+the simulator can be specified. The default are 127.0.0.1 and 2321.</p>
+<p>Example: <strong>-T mssim:host=localhost,port=2321</strong> or
+<strong>export <em>TPM2TOOLS_TCTI</em>=&quot;mssim:host=localhost,port=2321&quot;</strong></p>
+</li>
+<li><p><strong>abrmd</strong>:
+For the abrmd TCTI, the configuration string format is a series of simple
+key value pairs separated by a &#39;,&#39; character. Each key and value string
+are separated by a &#39;=&#39; character.</p>
+<ul>
+<li><p>TCTI abrmd supports two keys:</p>
+<ol>
+<li>&#39;bus_name&#39; : The name of the tabrmd service on the bus (a string).</li>
+<li>&#39;bus_type&#39; : The type of the dbus instance (a string) limited to
+  &#39;session&#39; and &#39;system&#39;.</li>
+</ol>
+</li>
+</ul>
+<p>  Specify the tabrmd tcti name and a config string of
+  <code>bus_name=com.example.FooBar</code>:</p>
+<pre><code>\--tcti=tabrmd:bus_name=com.example.FooBar
+</code></pre>
+<p>  Specify the default (abrmd) tcti and a config string of
+  <code>bus_type=session</code>:</p>
+<pre><code>\--tcti:bus_type=session
+</code></pre>
+<p>  <strong>NOTE</strong>: abrmd and tabrmd are synonymous.</p>
+</li>
+</ul>

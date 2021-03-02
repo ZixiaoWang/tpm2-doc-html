@@ -1,0 +1,9 @@
+<h1 id="limitations">Limitations</h1>
+<p>It expects a session to be already established via <strong>tpm2_startauthsession</strong>(1) and
+requires one of the following:</p>
+<ul>
+<li>direct device access</li>
+<li>extended session support with <strong>tpm2-abrmd</strong>.</li>
+</ul>
+<p>Without it, most resource managers <strong>will not</strong> save session state between command
+invocations.</p>

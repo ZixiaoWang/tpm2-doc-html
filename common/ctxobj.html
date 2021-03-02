@@ -1,0 +1,18 @@
+<h1 id="context-object-format">Context Object Format</h1>
+<p>The type of a context object, whether it is a handle or file name, is
+determined according to the following logic <em>in-order</em>:</p>
+<ul>
+<li><p>If the argument is a file path, then the file is loaded as a restored TPM transient object.</p>
+</li>
+<li><p>If the argument is a <em>prefix</em> match on one of:</p>
+<ul>
+<li>owner: the owner hierarchy</li>
+<li>platform: the platform hierarchy</li>
+<li>endorsement: the endorsement hierarchy</li>
+<li>lockout: the lockout control persistent object</li>
+</ul>
+</li>
+<li><p>If the argument argument can be loaded as a number it will be treat as a handle,
+e.g. 0x81010013 and used directly.</p>
+</li>
+</ul>

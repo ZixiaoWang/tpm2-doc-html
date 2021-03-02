@@ -1,0 +1,30 @@
+<h1 id="nv-attributes">NV Attributes</h1>
+<p>NV Attributes are used to control various properties of the NV defined space.
+When specified as an option, either the raw bitfield mask or &quot;nice-names&quot; may be
+used. The values can be found in Table 204 Part 2 of the TPM2.0 specification,
+which can be found here:</p>
+<p><a href="https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-01.38.pdf">https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-01.38.pdf</a></p>
+<p>Nice names are calculated by taking the name field of table 204 and removing the
+prefix <strong>TPMA_NV_</strong> and lowercasing the result. Thus, <strong>TPMA_NV_PPWRITE</strong> becomes
+ppwrite. Nice names can be joined using the bitwise or &quot;|&quot; symbol.</p>
+<p>Note that the <strong>TPM_NT</strong> field is 4 bits wide, and thus can be set via
+<strong>nt=<num></strong> format. For instance, to set The fields <strong>TPMA_NV_OWNERREAD</strong>,
+<strong>TPMA_NV_OWNERWRITE</strong>, <strong>TPMA_NV_POLICYWRITE</strong>, and <strong>TPMA_NT = 0x2</strong>, the argument
+would be:</p>
+<p><strong>ownerread|ownerwrite|policywrite|nt=0x2</strong></p>
+<p>Additionally, the NT field, which denotes the type of the NV index, can also be specified
+via friendly names:</p>
+<ul>
+<li>ordinary - Ordinary contains data that is opaque to the TPM that can
+  only be modified using TPM2_NV_Write.</li>
+<li>counter - Counter contains an 8-octet value that is to be used as a
+  counter and can only be modified with TPM2_NV_Increment</li>
+<li>bits - Bit Field contains an 8-octet value to be used as a bit field
+  and can only be modified with TPM2_NV_SetBits.</li>
+<li>pinfail - PIN Fail contains an 8-octet pinCount that increments on a PIN authorization failure and a pinLimit.</li>
+<li>pinpass - PIN Pass contains an 8-octet pinCount that increments on a PIN authorization success and a pinLimit.</li>
+</ul>
+<p>For instance, to set The fields <strong>TPMA_NV_OWNERREAD</strong>,
+<strong>TPMA_NV_OWNERWRITE</strong>, <strong>TPMA_NV_POLICYWRITE</strong>, and <strong>TPMA_NT = bits</strong>, the argument
+would be:</p>
+<p><strong>ownerread|ownerwrite|policywrite|nt=bits</strong></p>

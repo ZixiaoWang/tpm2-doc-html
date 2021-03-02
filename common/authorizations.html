@@ -1,0 +1,73 @@
+<h1 id="authorization-formatting">Authorization Formatting</h1>
+<p>Authorization for use of an object in TPM2.0 can come in 3 different forms:</p>
+<ol>
+<li>Password</li>
+<li>HMAC</li>
+<li>Sessions</li>
+</ol>
+<p><strong>NOTE:</strong> &quot;Authorizations default to the <strong>EMPTY PASSWORD</strong> when not specified&quot;.</p>
+<h2 id="passwords">Passwords</h2>
+<p>Passwords are interpreted in the following forms below using prefix identifiers.</p>
+<p><strong>Note</strong>: By default passwords are assumed to be in the string form when they do
+not have a prefix.</p>
+<h3 id="string">String</h3>
+<p>A string password, specified by prefix &quot;str:&quot; or it&#39;s absence
+(raw string without prefix) is not interpreted, and is directly used for
+authorization.</p>
+<h4 id="examples">Examples</h4>
+<pre><code>foobar
+str:foobar
+</code></pre>
+<h3 id="hex-string">Hex-string</h3>
+<p>A hex-string password, specified by prefix &quot;hex:&quot; is converted from a hexidecimal
+form into a byte array form, thus allowing passwords with non-printable and/or
+terminal un-friendly characters.</p>
+<h4 id="example">Example</h4>
+<pre><code>hex:0x1122334455667788
+</code></pre>
+<h3 id="file">File</h3>
+<p>A file based password, specified be prefix &quot;file:&quot; should be the path of a file
+containing the password to be read by the tool or a &quot;-&quot; to use stdin.
+Storing passwords in files prevents information leakage, passwords passed as
+options can be read from the process list or common shell history features.</p>
+<h4 id="examples-1">Examples</h4>
+<pre><code># to use stdin and be prompted
+file:-
+
+# to use a file from a path
+file:path/to/password/file
+
+# to echo a password via stdin:
+echo foobar | tpm2_tool -p file:-
+
+# to use a bash here-string via stdin:
+
+tpm2_tool -p file:- &lt;&lt;&lt; foobar
+</code></pre>
+<h2 id="sessions">Sessions</h2>
+<p>When using a policy session to authorize the use of an object, prefix the option argument
+with the <em>session</em> keyword.  Then indicate a path to a session file that was created
+with tpm2_startauthsession(1). Optionally, if the session requires an auth value to be
+sent with the session handle (eg policy password), then append a + and a string as described
+in the <strong>Passwords</strong> section.</p>
+<h3 id="examples-2">Examples</h3>
+<p>To use a session context file called <em>session.ctx</em>.</p>
+<pre><code>session:session.ctx
+</code></pre>
+<p>To use a session context file called <em>session.ctx</em> <strong>AND</strong> send the authvalue mypassword.</p>
+<pre><code>session:session.ctx+mypassword
+</code></pre>
+<p>To use a session context file called <em>session.ctx</em> <strong>AND</strong> send the <em>HEX</em> authvalue 0x11223344.</p>
+<pre><code>session:session.ctx+hex:11223344
+</code></pre>
+<h2 id="pcr-authorizations">PCR Authorizations</h2>
+<p>You can satisfy a PCR policy using the &quot;pcr:&quot; prefix and the PCR minilanguage. The PCR
+minilanguage is as follows:
+<code>&lt;pcr-spec&gt;=&lt;raw-pcr-file&gt;</code></p>
+<p>The PCR spec is documented in in the section &quot;PCR bank specifiers&quot;.</p>
+<p>The <code>raw-pcr-file</code> is an <strong>optional</strong> the output of the raw PCR contents as returned by <em>tpm2_pcrread(1)</em>.</p>
+<p><a href="common/pcr.md">PCR bank specifiers</a></p>
+<h3 id="examples-3">Examples</h3>
+<p>To satisfy a PCR policy of sha256 on banks 0, 1, 2 and 3 use a specifier of:</p>
+<pre><code>pcr:sha256:0,1,2,3
+</code></pre>

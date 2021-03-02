@@ -1,0 +1,121 @@
+<h1 id="algorithm-specifiers">Algorithm Specifiers</h1>
+<p>Options that take algorithms support &quot;nice-names&quot;.</p>
+<p>There are two major algorithm specification string classes, simple and complex.
+Only certain algorithms will be accepted by the TPM, based on usage and conditions.</p>
+<h2 id="simple-specifiers">Simple specifiers</h2>
+<p>These are strings with no additional specification data. When creating objects,
+non-specified portions of an object are assumed to defaults. You can find the
+list of known &quot;Simple Specifiers Below&quot;.</p>
+<h3 id="asymmetric">Asymmetric</h3>
+<ul>
+<li>rsa</li>
+<li>ecc</li>
+</ul>
+<h3 id="symmetric">Symmetric</h3>
+<ul>
+<li>aes</li>
+<li>camellia</li>
+</ul>
+<h3 id="hashing-algorithms">Hashing Algorithms</h3>
+<ul>
+<li>sha1</li>
+<li>sha256</li>
+<li>sha384</li>
+<li>sha512</li>
+<li>sm3_256</li>
+<li>sha3_256</li>
+<li>sha3_384</li>
+<li>sha3_512</li>
+</ul>
+<h3 id="keyed-hash">Keyed Hash</h3>
+<ul>
+<li>hmac</li>
+<li>xor</li>
+</ul>
+<h3 id="signing-schemes">Signing Schemes</h3>
+<ul>
+<li>rsassa</li>
+<li>rsapss</li>
+<li>ecdsa</li>
+<li>ecdaa</li>
+<li>ecschnorr</li>
+</ul>
+<h3 id="asymmetric-encryption-schemes">Asymmetric Encryption Schemes</h3>
+<ul>
+<li>oaep</li>
+<li>rsaes</li>
+<li>ecdh</li>
+</ul>
+<h3 id="modes">Modes</h3>
+<ul>
+<li>ctr</li>
+<li>ofb</li>
+<li>cbc</li>
+<li>cfb</li>
+<li>ecb</li>
+</ul>
+<h3 id="misc">Misc</h3>
+<ul>
+<li>null</li>
+</ul>
+<h2 id="complex-specifiers">Complex Specifiers</h2>
+<p>Objects, when specified for creation by the TPM, have numerous algorithms to populate in the
+public data. Things like type, scheme and asymmetric details, key size, etc. Below is the
+general format for specifying this data:
+<code>&lt;type&gt;:&lt;scheme&gt;:&lt;symmetric-details&gt;</code></p>
+<h3 id="type-specifiers">Type Specifiers</h3>
+<p>   This portion of the complex algorithm specifier is required. The remaining scheme and symmetric details
+   will default based on the type specified and the type of the object being created.</p>
+<ul>
+<li>aes - Default AES: aes128</li>
+<li>aes128<code>&lt;mode&gt;</code> - 128 bit AES with optional mode (<em>ctr</em>|<em>ofb</em>|<em>cbc</em>|<em>cfb</em>|<em>ecb</em>). If mode is not
+  specified, defaults to <em>null</em>.</li>
+<li>aes192<code>&lt;mode&gt;</code> - Same as aes128<code>&lt;mode&gt;</code>, except for a 192 bit key size.</li>
+<li>aes256<code>&lt;mode&gt;</code> - Same as aes128<code>&lt;mode&gt;</code>, except for a 256 bit key size.</li>
+<li>ecc - Elliptical Curve, defaults to ecc256.</li>
+<li>ecc192 - 192 bit ECC</li>
+<li>ecc224 - 224 bit ECC</li>
+<li>ecc256 - 256 bit ECC</li>
+<li>ecc384 - 384 bit ECC</li>
+<li>ecc521 - 521 bit ECC</li>
+<li>rsa - Default RSA: rsa2048</li>
+<li>rsa1024 - RSA with 1024 bit keysize.</li>
+<li>rsa2048 - RSA with 2048 bit keysize.</li>
+<li>rsa4096 - RSA with 4096 bit keysize.</li>
+</ul>
+<h3 id="scheme-specifiers">Scheme Specifiers</h3>
+<p>Next, is an optional field, it can be skipped.</p>
+<p>Schemes are usually <strong>Signing Schemes</strong> or <strong>Asymmetric Encryption Schemes</strong>.
+Most signing schemes take a hash algorithm directly following the signing scheme. If the hash
+algorithm is missing, it defaults to <em>sha256</em>. Some take no arguments, and some take multiple
+arguments.</p>
+<h4 id="hash-optional-scheme-specifiers">Hash Optional Scheme Specifiers</h4>
+<p>These scheme specifiers are followed by a dash and a valid hash algorithm, For example: <code>oaep-sha256</code>.</p>
+<ul>
+<li>oaep</li>
+<li>ecdh</li>
+<li>rsassa</li>
+<li>rsapss</li>
+<li>ecdsa</li>
+<li>ecschnorr</li>
+</ul>
+<h4 id="multiple-option-scheme-specifiers">Multiple Option Scheme Specifiers</h4>
+<p>This scheme specifier is followed by a count (max size UINT16) then followed by a dash(-) and a valid hash algorithm.</p>
+<ul>
+<li>ecdaa
+For example, ecdaa4-sha256. If no count is specified, it defaults to 4.</li>
+</ul>
+<h4 id="no-option-scheme-specifiers">No Option Scheme Specifiers</h4>
+<p>This scheme specifier takes NO arguments.</p>
+<ul>
+<li>rsaes</li>
+</ul>
+<h3 id="symmetric-details-specifiers">Symmetric Details Specifiers</h3>
+<p>This field is optional, and defaults based on the <em>type</em> of object being created and it&#39;s attributes.
+Generally, any valid <strong>Symmetric</strong> specifier from the <strong>Type Specifiers</strong> list should work. If not
+specified, an asymmetric objects symmetric details defaults to <em>aes128cfb</em>.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="create-an-rsa2048-key-with-an-rsaes-asymmetric-encryption-scheme">Create an rsa2048 key with an rsaes asymmetric encryption scheme</h3>
+<p><code>tpm2_create -C parent.ctx -G rsa2048:rsaes -u key.pub -r key.priv</code></p>
+<h3 id="create-an-ecc256-key-with-an-ecdaa-signing-scheme-with-a-count-of-4-and-sha384-hash">Create an ecc256 key with an ecdaa signing scheme with a count of 4 and sha384 hash</h3>
+<p><code>/tpm2_create -C parent.ctx -G ecc256:ecdaa4-sha384 -u key.pub -r key.priv</code></p>

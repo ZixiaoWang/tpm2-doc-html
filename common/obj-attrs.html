@@ -1,0 +1,13 @@
+<h1 id="object-attributes">Object Attributes</h1>
+<p>Object Attributes are used to control various properties of created objects.
+When specified as an option, either the raw bitfield mask or &quot;nice-names&quot; may be
+used. The values can be found in Table 31 Part 2 of the TPM2.0 specification,
+which can be found here:</p>
+<p><a href="https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-01.38.pdf">https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-01.38.pdf</a></p>
+<p>Nice names are calculated by taking the name field of table 31 and removing the
+prefix <strong>TPMA_OBJECT_</strong> and lowercasing the result. Thus, <strong>TPMA_OBJECT_FIXEDTPM</strong> becomes
+fixedtpm. Nice names can be joined using the bitwise or &quot;|&quot; symbol.</p>
+<p>For instance, to set The fields <strong>TPMA_OBJECT_FIXEDTPM</strong>,
+<strong>TPMA_OBJECT_NODA</strong>, and <strong>TPMA_OBJECT_SIGN_ENCRYPT</strong>, the argument
+would be:</p>
+<p><strong>fixedtpm|noda|sign</strong></p>
