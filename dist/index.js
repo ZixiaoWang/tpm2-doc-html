@@ -67,7 +67,7 @@ window.addEventListener('load', () => {
     const input = document.getElementById('input');
     const list = document.getElementById('candidates');
     const docContainer = document.getElementById('doccontainer');
-
+    const themeSwitch = document.getElementById('themeswitch');
 
     if (input && list && docContainer) {
         input.addEventListener('keyup', (event) => {
@@ -90,6 +90,13 @@ window.addEventListener('load', () => {
             if (template) {
                 fillElement(docContainer, template.innerHTML);
             }
+        })
+    }
+
+    if (themeSwitch) {
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeSwitch.classList.toggle('dark')
         })
     }
 })

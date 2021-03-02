@@ -1,10 +1,8 @@
 html, body {
     margin: 0px;
+    transition: all .2s ease-in-out;
+    transition-property: color, background-color, border-color;
 }
-.container {
-    padding: 20px 12px;
-}
-
 
 ul {
     list-style: none;
@@ -41,12 +39,26 @@ pre>code {
     white-space: pre-line;
 }
 
+
+.dark-mode {
+    background-color: #232323;
+    color: #ececec;
+}
+
+.dark-mode input {
+    background-color: #cccccc;
+}
+
+.container {
+    padding: 20px 12px;
+}
 .candidates {
     height: auto;
     max-height: 400px;
     overflow-y: auto;
     border: 1px solid #cccccc;
     padding: 12px 0px;
+    padding-bottom: 2px;
     border-radius: 5px;
 }
 
@@ -56,20 +68,90 @@ pre>code {
     padding-left: 12px;
 }
 
+.dark-mode .candidates {
+    border-color: #666666;
+}
+
+.dark-mode .candidates li {
+    color: #999999;
+}
+
 .candidates li b {
     color: black;
 }
 
+.dark-mode .candidates li b {
+    color: white;
+}
+
 .doc-container {
     padding: 0px 12px;
-    /* margin-top: -50px; */
     border: 1px solid #cccccc;
     border-radius: 5px;
     background: rgba(0,0,0, 0.03);
+}
+
+.dark-mode .doc-container {
+    background-color: rgba(0,0,0, 0.3);
+    color: #a9a9a9;
+    border-color: #666666;
+}
+
+.dark-mode .doc-container code {
+    background-color: #333333;
+    color: orange;
 }
 
 
 .hidden {
     /* visibility: hidden; */
     display: none;
+}
+
+
+
+
+.theme-switch {
+    position: fixed;
+    top: -100px;
+    right: -100px;
+    width: 200px; 
+    height: 200px;
+    border-radius: 50%;
+    border-color: #cccccc;
+    cursor: pointer;
+    text-align: center;
+    font-size: 35px;
+    line-height: 50px;
+    transition: transform .3s ease-in-out;
+}
+
+.theme-switch.dark {
+    transform: rotate(180deg);
+}
+
+.theme-switch::before {
+    content: '☼';
+    display: block;
+    width: 50px; height: 50px;
+    position: absolute;
+    top: 120px;
+    right: 120px;
+}
+
+.theme-switch:hover:before {
+    text-shadow: 0px 0px 8px rgba(255,255,255, 0.5);
+}
+
+.theme-switch::after {
+    content: '☽';
+    display: block;
+    width: 50px; height: 50px;
+    position: absolute;
+    bottom: 120px;
+    left: 120px;
+}
+
+.theme-switch:hover:after {
+    text-shadow: 0px 0px 8px rgba(255,255,255, 0.5);
 }
