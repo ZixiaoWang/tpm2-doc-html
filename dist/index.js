@@ -94,9 +94,18 @@ window.addEventListener('load', () => {
     }
 
     if (themeSwitch) {
+        if (localStorage.getItem('TPM_DOC_THEME') === 'DARK') {
+            document.body.classList.add('dark-mode');
+            themeSwitch.classList.add('dark');
+        }
         themeSwitch.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            themeSwitch.classList.toggle('dark')
-        })
+            themeSwitch.classList.toggle('dark');
+            if (document.body.className.includes('dark-mode')) {
+                localStorage.setItem('TPM_DOC_THEME', 'DARK');
+            } else {
+                localStorage.setItem('TPM_DOC_THEME', 'LIGHT');
+            }
+        });
     }
 })
