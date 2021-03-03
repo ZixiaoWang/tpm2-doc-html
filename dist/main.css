@@ -39,6 +39,10 @@ pre>code {
     white-space: pre-line;
 }
 
+form {
+    margin-bottom: 0px;
+}
+
 
 .dark-mode {
     background-color: #232323;

@@ -64,15 +64,37 @@ function fillElement(element, innerHTML) {
 
 
 window.addEventListener('load', () => {
+    let candidates = [];
+
     const input = document.getElementById('input');
     const list = document.getElementById('candidates');
     const docContainer = document.getElementById('doccontainer');
     const themeSwitch = document.getElementById('themeswitch');
+    const form = document.getElementById('form');
+
+    function showTemplateById(id) {
+        const template = document.getElementById(id);
+        resetElement(list);
+        if (template) {
+            fillElement(docContainer, template.innerHTML);
+        }
+    }
+
+    if (form && input) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (candidates.length > 0) {
+                const id = candidates[0].cmd;
+                input.value = 'tpm2 ' + id;
+                showTemplateById(id);
+            }
+        })
+    }
 
     if (input && list && docContainer) {
-        input.addEventListener('keyup', (event) => {
+        input.addEventListener('input', (event) => {
             const keywords = event.target.value || '';
-            const candidates = getCandidates(keywords);
+            candidates = getCandidates(keywords);
             resetElement(docContainer);
 
             if (candidates.length > 0) {
@@ -84,12 +106,8 @@ window.addEventListener('load', () => {
 
         list.addEventListener('click', (event) => {
             const id = event.target.dataset.id;
-            const template = document.getElementById(id);
             input.value = 'tpm2 ' + id;
-            resetElement(list);
-            if (template) {
-                fillElement(docContainer, template.innerHTML);
-            }
+            showTemplateById(id);
         })
     }
 
